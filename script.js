@@ -7,7 +7,7 @@ const typing = document.getElementById("typing");
 const words = [
     "Web Developer",
     "Frontend Developer",
-    "Business Administrator",
+    "Backend Developer",
     "Human Resource Professional",
     "Problem Solver"
 ];
@@ -276,10 +276,30 @@ this.appendChild(circle);
 
 
 // ===========================
-// CONSOLE MESSAGE
+// WELCOME NOTICE
 // ===========================
 
-console.log("%cWelcome to Rowland Joshua's Portfolio",
-"color:#8b5cf6;font-size:18px;font-weight:bold;");
+const welcomeNotice = document.createElement("div");
+welcomeNotice.textContent = "Welcome to Rowland Joshua's Portfolio";
+welcomeNotice.style.position = "fixed";
+welcomeNotice.style.bottom = "20px";
+welcomeNotice.style.right = "20px";
+welcomeNotice.style.background = "linear-gradient(135deg, #8b5cf6, #2563eb)";
+welcomeNotice.style.color = "#fff";
+welcomeNotice.style.padding = "12px 18px";
+welcomeNotice.style.borderRadius = "999px";
+welcomeNotice.style.fontSize = "14px";
+welcomeNotice.style.fontWeight = "600";
+welcomeNotice.style.boxShadow = "0 10px 25px rgba(0,0,0,0.25)";
+welcomeNotice.style.zIndex = "9999";
+welcomeNotice.style.opacity = "0";
+welcomeNotice.style.transition = "opacity 0.4s ease";
+document.body.appendChild(welcomeNotice);
 
-console.log("Designed with HTML, CSS & JavaScript.");
+setTimeout(() => {
+    welcomeNotice.style.opacity = "1";
+}, 300);
+
+setTimeout(() => {
+    welcomeNotice.style.opacity = "0";
+}, 3200);
