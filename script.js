@@ -1,189 +1,90 @@
-// ===========================
-// TYPING ANIMATION
-// ===========================
-
-const typing = document.getElementById("typing");
-
-const words = [
-    "Web Developer",
-    "Frontend Developer",
-    "Backend Developer",
-    "Human Resource Professional",
-    "Problem Solver"
-];
-
-let wordIndex = 0;
-let charIndex = 0;
-let deleting = false;
-
-function typeEffect() {
-
-    const currentWord = words[wordIndex];
-
-    if (!deleting) {
-
-        typing.textContent = currentWord.substring(0, charIndex + 1);
-        charIndex++;
-
-        if (charIndex === currentWord.length) {
-
-            deleting = true;
-
-            setTimeout(typeEffect, 1800);
-
-            return;
-        }
-
-    } else {
-
-        typing.textContent = currentWord.substring(0, charIndex - 1);
-
-        charIndex--;
-
-        if (charIndex === 0) {
-
-            deleting = false;
-
-            wordIndex++;
-
-            if (wordIndex === words.length) {
-
-                wordIndex = 0;
-
-            }
-
-        }
-
-    }
-
-    setTimeout(typeEffect, deleting ? 70 : 120);
-
-}
-
-typeEffect();
-
-
-// ===========================
-// MOBILE MENU
-// ===========================
+/* ==========================
+   MOBILE NAVIGATION
+========================== */
 
 const menuBtn = document.getElementById("menuBtn");
 const nav = document.getElementById("nav");
 
-menuBtn.addEventListener("click", () => {
+if (menuBtn && nav) {
 
-    nav.classList.toggle("active");
+    menuBtn.addEventListener("click", () => {
 
-    if(nav.classList.contains("active")){
+        nav.classList.toggle("active");
 
-        menuBtn.innerHTML = '<i class="fas fa-times"></i>';
+        const icon = menuBtn.querySelector("i");
 
-    }else{
+        if (nav.classList.contains("active")) {
 
-        menuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            icon.classList.remove("fa-bars");
+            icon.classList.add("fa-xmark");
 
-    }
+        } else {
 
-});
-
-// Close menu when a link is clicked
-
-document.querySelectorAll("nav a").forEach(link=>{
-
-    link.addEventListener("click",()=>{
-
-        nav.classList.remove("active");
-
-        menuBtn.innerHTML='<i class="fas fa-bars"></i>';
-
-    });
-
-});
-
-
-// ===========================
-// BACK TO TOP BUTTON
-// ===========================
-
-const topBtn = document.getElementById("topBtn");
-
-window.addEventListener("scroll", ()=>{
-
-    if(window.scrollY > 500){
-
-        topBtn.style.display = "block";
-
-    }else{
-
-        topBtn.style.display = "none";
-
-    }
-
-});
-
-topBtn.addEventListener("click", ()=>{
-
-    window.scrollTo({
-
-        top:0,
-
-        behavior:"smooth"
-
-    });
-
-});
-
-
-// ===========================
-// HEADER SHADOW
-// ===========================
-
-const header = document.querySelector("header");
-
-window.addEventListener("scroll",()=>{
-
-    if(window.scrollY > 50){
-
-        header.style.boxShadow = "0 10px 30px rgba(0,0,0,.35)";
-
-    }else{
-
-        header.style.boxShadow = "none";
-
-    }
-
-});
-
-
-// ===========================
-// ACTIVE NAV LINK
-// ===========================
-
-const sections = document.querySelectorAll("section");
-const navLinks = document.querySelectorAll("nav a");
-
-window.addEventListener("scroll", ()=>{
-
-    let current = "";
-
-    sections.forEach(section=>{
-
-        const sectionTop = section.offsetTop - 120;
-        const sectionHeight = section.clientHeight;
-
-        if(pageYOffset >= sectionTop){
-
-            current = section.getAttribute("id");
+            icon.classList.remove("fa-xmark");
+            icon.classList.add("fa-bars");
 
         }
 
     });
 
-    navLinks.forEach(link=>{
+
+    /* CLOSE MENU WHEN LINK IS CLICKED */
+
+    const navLinks = nav.querySelectorAll("a");
+
+    navLinks.forEach(link => {
+
+        link.addEventListener("click", () => {
+
+            nav.classList.remove("active");
+
+            const icon = menuBtn.querySelector("i");
+
+            icon.classList.remove("fa-xmark");
+            icon.classList.add("fa-bars");
+
+        });
+
+    });
+
+}
+
+
+/* ==========================
+   ACTIVE NAVIGATION
+========================== */
+
+const sections = document.querySelectorAll("section[id]");
+const navigationLinks = document.querySelectorAll("nav a");
+
+function updateActiveNavigation() {
+
+    let currentSection = "";
+
+    sections.forEach(section => {
+
+        const sectionTop = section.offsetTop - 180;
+        const sectionHeight = section.offsetHeight;
+
+        if (
+            window.scrollY >= sectionTop &&
+            window.scrollY < sectionTop + sectionHeight
+        ) {
+
+            currentSection = section.getAttribute("id");
+
+        }
+
+    });
+
+
+    navigationLinks.forEach(link => {
 
         link.classList.remove("active");
 
-        if(link.getAttribute("href") === "#" + current){
+        if (
+            link.getAttribute("href") === "#" + currentSection
+        ) {
 
             link.classList.add("active");
 
@@ -191,115 +92,264 @@ window.addEventListener("scroll", ()=>{
 
     });
 
-});
+}
+
+window.addEventListener("scroll", updateActiveNavigation);
+
+window.addEventListener("load", updateActiveNavigation);
 
 
-// ===========================
-// SCROLL REVEAL
-// ===========================
+/* ==========================
+   NAVBAR SCROLL EFFECT
+========================== */
 
-const revealElements = document.querySelectorAll(
+const header = document.querySelector("header");
 
-".service-card, .project-card, .about-card, .skills span"
+function updateHeader() {
 
-);
+    if (!header) return;
 
-function reveal(){
+    if (window.scrollY > 50) {
 
-    revealElements.forEach(element=>{
+        header.classList.add("scrolled");
 
-        const windowHeight = window.innerHeight;
+    } else {
 
-        const revealTop = element.getBoundingClientRect().top;
+        header.classList.remove("scrolled");
 
-        if(revealTop < windowHeight - 100){
+    }
 
-            element.style.opacity = "1";
-            element.style.transform = "translateY(0)";
+}
+
+window.addEventListener("scroll", updateHeader);
+
+window.addEventListener("load", updateHeader);
+
+
+/* ==========================
+   BACK TO TOP
+========================== */
+
+const topBtn = document.getElementById("topBtn");
+
+if (topBtn) {
+
+    window.addEventListener("scroll", () => {
+
+        if (window.scrollY > 500) {
+
+            topBtn.style.display = "flex";
+
+            topBtn.style.justifyContent = "center";
+
+            topBtn.style.alignItems = "center";
+
+        } else {
+
+            topBtn.style.display = "none";
+
+        }
+
+    });
+
+
+    topBtn.addEventListener("click", () => {
+
+        window.scrollTo({
+
+            top: 0,
+
+            behavior: "smooth"
+
+        });
+
+    });
+
+}
+
+
+/* ==========================
+   TYPING ANIMATION
+========================== */
+
+const typingElement = document.getElementById("typing");
+
+if (typingElement) {
+
+    const words = [
+
+        "Full Stack Web Developer",
+        "Frontend Developer",
+        "Backend Developer",
+        "AI Video Creator",
+        "Digital Solutions Developer"
+
+    ];
+
+    let wordIndex = 0;
+
+    let characterIndex = 0;
+
+    let deleting = false;
+
+
+    function typeEffect() {
+
+        const currentWord = words[wordIndex];
+
+
+        if (!deleting) {
+
+            typingElement.textContent =
+                currentWord.substring(0, characterIndex + 1);
+
+            characterIndex++;
+
+
+            if (characterIndex === currentWord.length) {
+
+                deleting = true;
+
+                setTimeout(typeEffect, 1800);
+
+                return;
+
+            }
+
+        } else {
+
+            typingElement.textContent =
+                currentWord.substring(0, characterIndex - 1);
+
+            characterIndex--;
+
+
+            if (characterIndex === 0) {
+
+                deleting = false;
+
+                wordIndex++;
+
+                if (wordIndex >= words.length) {
+
+                    wordIndex = 0;
+
+                }
+
+            }
+
+        }
+
+
+        const speed = deleting ? 50 : 100;
+
+        setTimeout(typeEffect, speed);
+
+    }
+
+
+    typeEffect();
+
+}
+
+
+/* ==========================
+   CONTACT FORM
+========================== */
+
+const contactForm = document.getElementById("contactForm");
+const contactSubmit = document.getElementById("contactSubmit");
+const formStatus = document.getElementById("formStatus");
+
+if (contactForm) {
+
+    contactForm.addEventListener("submit", async function(event) {
+
+        event.preventDefault();
+
+        const formData = new FormData(contactForm);
+
+        contactSubmit.disabled = true;
+
+        contactSubmit.innerHTML = `
+            <i class="fas fa-spinner fa-spin"></i>
+            <span>Sending...</span>
+        `;
+
+        formStatus.textContent = "";
+
+        formStatus.className = "form-status";
+
+
+        try {
+
+            const response = await fetch(
+                "https://formspree.io/f/xqpzbgnd",
+                {
+                    method: "POST",
+
+                    body: formData,
+
+                    headers: {
+                        "Accept": "application/json"
+                    }
+
+                }
+            );
+
+
+            if (response.ok) {
+
+                formStatus.textContent =
+                    "✓ Message sent successfully! I'll get back to you soon.";
+
+                formStatus.classList.add("success");
+
+                contactForm.reset();
+
+
+                contactSubmit.innerHTML = `
+                    <i class="fas fa-check"></i>
+                    <span>Message Sent</span>
+                `;
+
+
+                setTimeout(() => {
+
+                    contactSubmit.innerHTML = `
+                        <i class="fas fa-paper-plane"></i>
+                        <span>Send Message</span>
+                    `;
+
+                    contactSubmit.disabled = false;
+
+                }, 4000);
+
+
+            } else {
+
+                throw new Error("Form submission failed.");
+
+            }
+
+
+        } catch (error) {
+
+            formStatus.textContent =
+                "Something went wrong. Please try again or email me directly.";
+
+            formStatus.classList.add("error");
+
+
+            contactSubmit.innerHTML = `
+                <i class="fas fa-paper-plane"></i>
+                <span>Send Message</span>
+            `;
+
+            contactSubmit.disabled = false;
 
         }
 
     });
 
 }
-
-revealElements.forEach(element=>{
-
-    element.style.opacity = "0";
-
-    element.style.transform = "translateY(40px)";
-
-    element.style.transition = "all .8s ease";
-
-});
-
-window.addEventListener("scroll", reveal);
-
-reveal();
-
-
-// ===========================
-// BUTTON RIPPLE EFFECT
-// ===========================
-
-document.querySelectorAll(".btn, .btn-outline").forEach(button=>{
-
-button.addEventListener("click", function(e){
-
-const circle = document.createElement("span");
-
-const diameter = Math.max(this.clientWidth,this.clientHeight);
-
-const radius = diameter / 2;
-
-circle.style.width = circle.style.height = `${diameter}px`;
-
-circle.style.left = `${e.clientX - this.offsetLeft - radius}px`;
-
-circle.style.top = `${e.clientY - this.offsetTop - radius}px`;
-
-circle.classList.add("ripple");
-
-const ripple = this.getElementsByClassName("ripple")[0];
-
-if(ripple){
-
-ripple.remove();
-
-}
-
-this.appendChild(circle);
-
-});
-
-});
-
-
-// ===========================
-// WELCOME NOTICE
-// ===========================
-
-const welcomeNotice = document.createElement("div");
-welcomeNotice.textContent = "Welcome to Rowland Joshua's Portfolio";
-welcomeNotice.style.position = "fixed";
-welcomeNotice.style.bottom = "20px";
-welcomeNotice.style.right = "20px";
-welcomeNotice.style.background = "linear-gradient(135deg, #8b5cf6, #2563eb)";
-welcomeNotice.style.color = "#fff";
-welcomeNotice.style.padding = "12px 18px";
-welcomeNotice.style.borderRadius = "999px";
-welcomeNotice.style.fontSize = "14px";
-welcomeNotice.style.fontWeight = "600";
-welcomeNotice.style.boxShadow = "0 10px 25px rgba(0,0,0,0.25)";
-welcomeNotice.style.zIndex = "9999";
-welcomeNotice.style.opacity = "0";
-welcomeNotice.style.transition = "opacity 0.4s ease";
-document.body.appendChild(welcomeNotice);
-
-setTimeout(() => {
-    welcomeNotice.style.opacity = "1";
-}, 300);
-
-setTimeout(() => {
-    welcomeNotice.style.opacity = "0";
-}, 3200);
