@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://bling17.github.io/JOSH-PORTFOLIO/sitemap.xml
